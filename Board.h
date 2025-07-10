@@ -16,4 +16,4 @@ class Board {
   char board[6][7];
 };
 
-void screenRefresh(Board& gameBoard, int id);
+void screenRefresh(const Board& gameBoard, int id);

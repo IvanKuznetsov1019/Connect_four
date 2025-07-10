@@ -128,7 +128,7 @@ bool Board::isWin(const int rowIndex, const int columnIndex) const {
   return false;
 }
 
-void screenRefresh(Board& gameBoard, int id) {
+void screenRefresh(const Board& gameBoard, int id) {
   switch (gameBoard.status) {
     case Board::Status::OK:
       gameBoard.draw();
