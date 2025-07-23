@@ -40,6 +40,7 @@ void Game::screenRefresh() const {
 }
 
 void Game::play() {
+  gameBoard.clear();
   gameBoard.draw();
   cout << "Ходит игрок №1" << endl;
   while (true) {

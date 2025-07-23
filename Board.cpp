@@ -9,11 +9,6 @@
 
 using namespace std;
 
-Board::Board() {
-  clear();
-  cout << "12321" << endl;
-}
-
 void Board::clear() {
   for (auto& row : board) {
     for (char& cell : row) {

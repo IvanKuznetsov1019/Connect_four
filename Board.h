@@ -1,6 +1,5 @@
 class Board {
  public:
-  Board();
   enum Status { OK, WIN, FULL, WC, WR };
   Status status;
   void update(const int columnIndex, const int id);
