@@ -1,20 +1,18 @@
-#include <string.h>
-
 #include <iostream>
+#include <string>
 
 #include "Board.h"
-
-using std::string;
 
 class Game {
  public:
   Game();
   void play();
+  void setup();
 
  private:
   void screenRefresh() const;
   Board gameBoard;
-  string command;
+  std::string command;
   int columnIndex;
   int playerId;
 };

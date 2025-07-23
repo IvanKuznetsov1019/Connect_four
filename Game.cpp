@@ -1,6 +1,7 @@
 #include "Game.h"
 
 #include <iostream>
+#include <locale>
 #include <string>
 
 using namespace std;
@@ -15,6 +16,8 @@ bool isNumber(string& command) {
 }
 
 Game::Game() : playerId(0), columnIndex(0), command(""), gameBoard() {}
+
+void Game::setup() { setlocale(LC_ALL, "ru_RU.UTF-8"); }
 
 void Game::screenRefresh() const {
   switch (gameBoard.status) {
