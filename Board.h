@@ -1,19 +1,14 @@
 class Board {
  public:
+  Board();
   enum Status { OK, WIN, FULL, WC, WR };
   Status status;
-  static Board& instance();
   void update(const int columnIndex, const int id);
   void draw() const;
-  void init();
+  void clear();
 
  private:
-  Board();
-  Board(const Board&) = delete;
-  Board& operator=(const Board&) = delete;
   bool isWin(const int rowIndex, const int columnIndex) const;
   bool hasEmptyCells() const;
   char board[6][7];
 };
-
-void screenRefresh(const Board& gameBoard, int id);
