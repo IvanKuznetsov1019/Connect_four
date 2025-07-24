@@ -1,5 +1,6 @@
+#ifndef GAME_H
+#define GAME_H
 #include <iostream>
-#include <string>
 
 #include "Board.h"
 
@@ -16,3 +17,4 @@ class Game {
   int columnIndex;
   int playerId;
 };
+#endif

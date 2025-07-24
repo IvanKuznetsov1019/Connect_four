@@ -1,11 +1,6 @@
 #include "Board.h"
 
-#include <algorithm>
 #include <iostream>
-#include <iterator>
-#include <string>
-
-#define WIN_SCORE 4
 
 using namespace std;
 
@@ -28,7 +23,7 @@ void Board::draw() const {
 }
 
 void Board::update(const int columnIndex, const int id) {
-  if (columnIndex < 0 || columnIndex > 6) {
+  if (columnIndex < 0 || columnIndex > NUM_OF_COLUMNS - 1) {
     status = WC;
     return;
   }
@@ -39,7 +34,7 @@ void Board::update(const int columnIndex, const int id) {
     }
     rowIndex++;
   }
-  if (rowIndex > 5) {
+  if (rowIndex > NUM_OF_ROWS - 1) {
     status = WR;
     return;
   }
@@ -56,7 +51,7 @@ void Board::update(const int columnIndex, const int id) {
 }
 
 bool Board::hasEmptyCells() const {
-  for (const char cell : board[5]) {
+  for (const char cell : board[NUM_OF_ROWS - 1]) {
     if (cell == '-') {
       return true;
     }
@@ -95,7 +90,7 @@ bool Board::isWin(const int rowIndex, const int columnIndex) const {
   int offset = min(rowIndex, columnIndex);
   int currentRowIndex = rowIndex - offset;
   int currentColumnIndex = columnIndex - offset;
-  while (currentRowIndex < 6 && currentColumnIndex < 7) {
+  while (currentRowIndex < NUM_OF_ROWS && currentColumnIndex < NUM_OF_COLUMNS) {
     if (board[currentRowIndex][currentColumnIndex] == c) {
       scoreCount++;
       if (scoreCount == WIN_SCORE) {
@@ -112,7 +107,7 @@ bool Board::isWin(const int rowIndex, const int columnIndex) const {
   offset = min(5 - rowIndex, columnIndex);
   currentRowIndex = rowIndex + offset;
   currentColumnIndex = columnIndex - offset;
-  while (currentRowIndex >= 0 && currentColumnIndex < 7) {
+  while (currentRowIndex >= 0 && currentColumnIndex < NUM_OF_COLUMNS) {
     if (board[currentRowIndex][currentColumnIndex] == c) {
       scoreCount++;
       if (scoreCount == WIN_SCORE) {

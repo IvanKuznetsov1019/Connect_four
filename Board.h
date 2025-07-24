@@ -1,3 +1,9 @@
+#ifndef BOARD_H
+#define BOARD_H
+#define WIN_SCORE 4
+#define NUM_OF_COLUMNS 7
+#define NUM_OF_ROWS 6
+
 class Board {
  public:
   enum Status { OK, WIN, FULL, WC, WR };
@@ -9,5 +15,6 @@ class Board {
  private:
   bool isWin(const int rowIndex, const int columnIndex) const;
   bool hasEmptyCells() const;
-  char board[6][7];
+  char board[NUM_OF_ROWS][NUM_OF_COLUMNS];
 };
+#endif
