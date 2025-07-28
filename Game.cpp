@@ -18,7 +18,7 @@ Game::Game() : playerId(0), columnIndex(0), command(""), gameBoard() {}
 
 void Game::setup() {
   setlocale(LC_ALL, "ru_RU.UTF-8");
-  // cout << "Выберите тпп доски. 'T' - треугольная, 'R' - прямоугольная." <<
+  // cout << "Выберите тип доски. 'T' - треугольная, 'R' - прямоугольная." <<
   // endl; char boardType; cin >> boardType; if (boardType == 'T') {
   //   //...
   // } else {
@@ -54,6 +54,7 @@ void Game::play() {
     }
 
     if (gameBoard.isWin(columnIndex)) {
+      gameBoard.draw();
       cout << "Победил игрок №" << to_string(playerId + 1) << endl;
       gameBoard.reset();
       playerId = 0;

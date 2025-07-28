@@ -23,6 +23,15 @@ void RectBoard::draw() const {
   }
 }
 
+bool RectBoard::isFull() const {
+  for (const char cell : board[NUM_OF_ROWS - 1]) {
+    if (cell == '-') {
+      return false;
+    }
+  }
+  return true;
+}
+
 bool RectBoard::placeChip(const int columnIndex, const char symbol) {
   int rowIndex = 0;
   for (const auto& row : board) {
@@ -35,15 +44,6 @@ bool RectBoard::placeChip(const int columnIndex, const char symbol) {
     return false;
   }
   board[rowIndex][columnIndex] = symbol;
-  return true;
-}
-
-bool RectBoard::isFull() const {
-  for (const char cell : board[NUM_OF_ROWS - 1]) {
-    if (cell == '-') {
-      return false;
-    }
-  }
   return true;
 }
 

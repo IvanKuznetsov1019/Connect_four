@@ -12,6 +12,7 @@ class Game {
 
  private:
   RectBoard gameBoard;
+  // TriangleBoard gameBoard;
   std::string command;
   int columnIndex;
   int playerId;

@@ -9,17 +9,19 @@ class IBoard {
  public:
   virtual void reset() = 0;
   virtual void draw() const = 0;
-  //...
+  virtual bool isFull() const = 0;
+  virtual bool placeChip(const int columnIndex, const char symbol) = 0;
+  virtual bool isWin(const int columnIndex) const = 0;
 };
 
 class RectBoard : public IBoard {
  public:
   RectBoard();
-  void draw() const override;
   void reset() override;
-  bool placeChip(const int columnIndex, const char symbol);
-  bool isWin(const int columnIndex) const;
-  bool isFull() const;
+  void draw() const override;
+  bool isFull() const override;
+  bool placeChip(const int columnIndex, const char symbol) override;
+  bool isWin(const int columnIndex) const override;
 
  private:
   char board[NUM_OF_ROWS][NUM_OF_COLUMNS];
@@ -28,9 +30,12 @@ class RectBoard : public IBoard {
 class TriangleBoard : public IBoard {
  public:
   TriangleBoard();
-  void draw() const override;
   void reset() override;
-  //...
+  void draw() const override;
+  bool isFull() const override;
+  bool placeChip(const int columnIndex, const char symbol) override;
+  bool isWin(const int columnIndex) const override;
+
  private:
   char board[TRIANGLE_SIDE][TRIANGLE_SIDE];
 };
