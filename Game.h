@@ -11,8 +11,7 @@ class Game {
   void setup();
 
  private:
-  void screenRefresh() const;
-  Board gameBoard;
+  RectBoard gameBoard;
   std::string command;
   int columnIndex;
   int playerId;

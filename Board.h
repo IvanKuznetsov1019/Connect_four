@@ -3,18 +3,35 @@
 #define WIN_SCORE 4
 #define NUM_OF_COLUMNS 7
 #define NUM_OF_ROWS 6
+#define TRIANGLE_SIDE 7
 
-class Board {
+class IBoard {
  public:
-  enum Status { OK, WIN, FULL, WC, WR };
-  Status status;
-  void update(const int columnIndex, const int id);
-  void draw() const;
-  void clear();
+  virtual void reset() = 0;
+  virtual void draw() const = 0;
+  //...
+};
+
+class RectBoard : public IBoard {
+ public:
+  RectBoard();
+  void draw() const override;
+  void reset() override;
+  bool placeChip(const int columnIndex, const char symbol);
+  bool isWin(const int columnIndex) const;
+  bool isFull() const;
 
  private:
-  bool isWin(const int rowIndex, const int columnIndex) const;
-  bool hasEmptyCells() const;
   char board[NUM_OF_ROWS][NUM_OF_COLUMNS];
+};
+
+class TriangleBoard : public IBoard {
+ public:
+  TriangleBoard();
+  void draw() const override;
+  void reset() override;
+  //...
+ private:
+  char board[TRIANGLE_SIDE][TRIANGLE_SIDE];
 };
 #endif

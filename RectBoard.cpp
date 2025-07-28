@@ -1,32 +1,29 @@
-#include "Board.h"
-
 #include <iostream>
+
+#include "Board.h"
 
 using namespace std;
 
-void Board::clear() {
+RectBoard::RectBoard() : IBoard() { reset(); }
+
+void RectBoard::reset() {
   for (auto& row : board) {
     for (char& cell : row) {
       cell = '-';
     }
   }
-  status = OK;
 }
 
-void Board::draw() const {
-  for (auto row = rbegin(board); row != rend(board); row++) {
-    for (auto cell = begin(*row); cell != end(*row); cell++) {
-      cout << '|' << *cell;
+void RectBoard::draw() const {
+  for (int i = NUM_OF_ROWS - 1; i >= 0; i--) {
+    for (int j = 0; j < NUM_OF_COLUMNS; j++) {
+      cout << '|' << board[i][j];
     }
     cout << '|' << endl;
   }
 }
 
-void Board::update(const int columnIndex, const int id) {
-  if (columnIndex < 0 || columnIndex > NUM_OF_COLUMNS - 1) {
-    status = WC;
-    return;
-  }
+bool RectBoard::placeChip(const int columnIndex, const char symbol) {
   int rowIndex = 0;
   for (const auto& row : board) {
     if (row[columnIndex] == '-') {
@@ -34,33 +31,31 @@ void Board::update(const int columnIndex, const int id) {
     }
     rowIndex++;
   }
-  if (rowIndex > NUM_OF_ROWS - 1) {
-    status = WR;
-    return;
+  if (rowIndex >= NUM_OF_ROWS) {
+    return false;
   }
-  board[rowIndex][columnIndex] = (id == 0) ? 'o' : 'x';
-  if (isWin(rowIndex, columnIndex)) {
-    status = WIN;
-    return;
-  }
-  if (!hasEmptyCells()) {
-    status = FULL;
-    return;
-  }
-  status = OK;
+  board[rowIndex][columnIndex] = symbol;
+  return true;
 }
 
-bool Board::hasEmptyCells() const {
+bool RectBoard::isFull() const {
   for (const char cell : board[NUM_OF_ROWS - 1]) {
     if (cell == '-') {
-      return true;
+      return false;
     }
   }
-  return false;
+  return true;
 }
 
-bool Board::isWin(const int rowIndex, const int columnIndex) const {
-  char c = board[rowIndex][columnIndex];
+bool RectBoard::isWin(const int columnIndex) const {
+  char c = '-';
+  int rowIndex;
+  for (rowIndex = NUM_OF_ROWS - 1; rowIndex >= 0; rowIndex--) {
+    if (board[rowIndex][columnIndex] != '-') {
+      c = board[rowIndex][columnIndex];
+      break;
+    }
+  }
 
   int scoreCount = 0;
   for (const char& cell : board[rowIndex]) {
@@ -104,7 +99,7 @@ bool Board::isWin(const int rowIndex, const int columnIndex) const {
   }
 
   scoreCount = 0;
-  offset = min(5 - rowIndex, columnIndex);
+  offset = min(NUM_OF_ROWS - 1 - rowIndex, columnIndex);
   currentRowIndex = rowIndex + offset;
   currentColumnIndex = columnIndex - offset;
   while (currentRowIndex >= 0 && currentColumnIndex < NUM_OF_COLUMNS) {
