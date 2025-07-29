@@ -1,6 +1,6 @@
-#include <iostream>
+#include "RectBoard.h"
 
-#include "Board.h"
+#include <iostream>
 
 using namespace std;
 

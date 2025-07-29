@@ -2,17 +2,16 @@
 #define GAME_H
 #include <iostream>
 
-#include "Board.h"
+#include "IBoard.h"
 
 class Game {
  public:
-  Game();
+  Game(IBoard* gbPtr);
   void play();
   void setup();
 
  private:
-  RectBoard gameBoard;
-  // TriangleBoard gameBoard;
+  IBoard* gameBoard;
   std::string command;
   int columnIndex;
   int playerId;

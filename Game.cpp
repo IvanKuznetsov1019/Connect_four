@@ -14,23 +14,16 @@ bool isNumber(string& command) {
   return true;
 }
 
-Game::Game() : playerId(0), columnIndex(0), command(""), gameBoard() {}
+Game::Game(IBoard* gbPtr)
+    : playerId(0), columnIndex(0), command(""), gameBoard(gbPtr) {}
 
-void Game::setup() {
-  setlocale(LC_ALL, "ru_RU.UTF-8");
-  // cout << "Выберите тип доски. 'T' - треугольная, 'R' - прямоугольная." <<
-  // endl; char boardType; cin >> boardType; if (boardType == 'T') {
-  //   //...
-  // } else {
-  //   //...
-  // }
-}
+void Game::setup() { setlocale(LC_ALL, "ru_RU.UTF-8"); }
 
 void Game::play() {
   map<int, char> idToSymbol = {{0, 'o'}, {1, 'x'}};
 
   while (true) {
-    gameBoard.draw();
+    gameBoard->draw();
     cout << "Ходит игрок №" << to_string(playerId + 1) << endl;
     cin >> command;
 
@@ -48,22 +41,22 @@ void Game::play() {
     }
     columnIndex--;
 
-    if (!gameBoard.placeChip(columnIndex, idToSymbol[playerId])) {
+    if (!gameBoard->placeChip(columnIndex, idToSymbol[playerId])) {
       cout << "В столбце нет свободной клетки" << endl;
       continue;
     }
 
-    if (gameBoard.isWin(columnIndex)) {
-      gameBoard.draw();
+    if (gameBoard->isWin(columnIndex)) {
+      gameBoard->draw();
       cout << "Победил игрок №" << to_string(playerId + 1) << endl;
-      gameBoard.reset();
+      gameBoard->reset();
       playerId = 0;
       continue;
     }
 
-    if (gameBoard.isFull()) {
+    if (gameBoard->isFull()) {
       cout << "Ничья" << endl;
-      gameBoard.reset();
+      gameBoard->reset();
       playerId = 0;
       continue;
     }

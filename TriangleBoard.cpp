@@ -1,6 +1,6 @@
-#include <iostream>
+#include "TriangleBoard.h"
 
-#include "Board.h"
+#include <iostream>
 
 using namespace std;
 
