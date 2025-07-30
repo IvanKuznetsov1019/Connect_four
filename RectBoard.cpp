@@ -47,131 +47,13 @@ bool RectBoard::placeChip(const int columnIndex, const char symbol) {
   return true;
 }
 
-// bool RectBoard::isWin(const int columnIndex) const {
-//   char c = '-';
-//   int rowIndex;
-//   for (rowIndex = NUM_OF_ROWS - 1; rowIndex >= 0; rowIndex--) {
-//     if (board[rowIndex][columnIndex] != '-') {
-//       c = board[rowIndex][columnIndex];
-//       break;
-//     }
-//   }
-
-//   int scoreCount = 0;
-//   for (const char& cell : board[rowIndex]) {
-//     if (cell == c) {
-//       scoreCount++;
-//       if (scoreCount == WIN_SCORE) {
-//         return true;
-//       }
-//     } else {
-//       scoreCount = 0;
-//     }
-//   }
-
-//   scoreCount = 0;
-//   for (int i = rowIndex; i >= 0; i--) {
-//     if (board[i][columnIndex] == c) {
-//       scoreCount++;
-//       if (scoreCount == WIN_SCORE) {
-//         return true;
-//       }
-//     } else {
-//       scoreCount = 0;
-//     }
-//   }
-
-//   scoreCount = 0;
-//   int offset = min(rowIndex, columnIndex);
-//   int currentRowIndex = rowIndex - offset;
-//   int currentColumnIndex = columnIndex - offset;
-//   while (currentRowIndex < NUM_OF_ROWS && currentColumnIndex <
-//   NUM_OF_COLUMNS) {
-//     if (board[currentRowIndex][currentColumnIndex] == c) {
-//       scoreCount++;
-//       if (scoreCount == WIN_SCORE) {
-//         return true;
-//       }
-//     } else {
-//       scoreCount = 0;
-//     }
-//     currentRowIndex++;
-//     currentColumnIndex++;
-//   }
-
-//   scoreCount = 0;
-//   offset = min(NUM_OF_ROWS - 1 - rowIndex, columnIndex);
-//   currentRowIndex = rowIndex + offset;
-//   currentColumnIndex = columnIndex - offset;
-//   while (currentRowIndex >= 0 && currentColumnIndex < NUM_OF_COLUMNS) {
-//     if (board[currentRowIndex][currentColumnIndex] == c) {
-//       scoreCount++;
-//       if (scoreCount == WIN_SCORE) {
-//         return true;
-//       }
-//     } else {
-//       scoreCount = 0;
-//     }
-//     currentRowIndex--;
-//     currentColumnIndex++;
-//   }
-
-//   return false;
-// }
-
-// bool RectBoard::isWin(const int columnIndex) const {
-//   char c = '-';
-//   int rowIndex;
-//   for (rowIndex = NUM_OF_ROWS - 1; rowIndex >= 0; rowIndex--) {
-//     if (board[rowIndex][columnIndex] != '-') {
-//       c = board[rowIndex][columnIndex];
-//       break;
-//     }
-//   }
-//   int scoreCount = 0;
-//   int currentRowIndex;
-//   int currentColumnIndex;
-//   auto checkDir{[&](const int r, const int c, const int dr, const int dc) {
-//     int offset =
-//         (dr != 0 && dc != 0)
-//             ? min(static_cast<int>(
-//                       (r * dr) + (NUM_OF_ROWS / 2 - ((NUM_OF_ROWS / 2) * dr))
-//                       - (0.5 - (0.5 * dr))),
-//                   c)
-//             : r * dr;
-//     currentRowIndex = r - offset;
-//     currentColumnIndex = c - offset;
-//     cout << offset << "  " << currentRowIndex << "  " << currentColumnIndex
-//          << endl;
-//     while (currentRowIndex >= 0 && currentColumnIndex < NUM_OF_COLUMNS &&
-//            currentRowIndex < NUM_OF_ROWS) {
-//       if (board[currentRowIndex][currentColumnIndex] == c) {
-//         scoreCount++;
-//         if (scoreCount == WIN_SCORE) {
-//           return true;
-//           break;
-//         }
-//       } else {
-//         scoreCount = 0;
-//       }
-//       currentRowIndex += dr;
-//       currentColumnIndex += dc;
-//     }
-//     return false;
-//   }};
-//   return checkDir(rowIndex, columnIndex, 1, 0) ||
-//          checkDir(rowIndex, columnIndex, 0, 1) ||
-//          checkDir(rowIndex, columnIndex, 1, 1) ||
-//          checkDir(rowIndex, columnIndex, 1, -1);
-// }
-
 bool RectBoard::isWin(const int columnIndex) const {
-  char c = '-';
+  char symbol = '-';
   int rowIndex = -1;
 
   for (rowIndex = NUM_OF_ROWS - 1; rowIndex >= 0; rowIndex--) {
     if (board[rowIndex][columnIndex] != '-') {
-      c = board[rowIndex][columnIndex];
+      symbol = board[rowIndex][columnIndex];
       break;
     }
   }
@@ -179,7 +61,7 @@ bool RectBoard::isWin(const int columnIndex) const {
   auto countConsecutive = [&](int r, int c, int dr, int dc) {
     int count = 0;
     while (r >= 0 && r < NUM_OF_ROWS && c >= 0 && c < NUM_OF_COLUMNS &&
-           board[r][c] == c) {
+           board[r][c] == symbol) {
       count++;
       r += dr;
       c += dc;

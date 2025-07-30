@@ -47,74 +47,39 @@ bool TriangleBoard::placeChip(const int columnIndex, const char symbol) {
 }
 
 bool TriangleBoard::isWin(const int columnIndex) const {
-  char c = '-';
-  int rowIndex;
+  char symbol = '-';
+  int rowIndex = -1;
+
   for (rowIndex = 0; rowIndex < TRIANGLE_SIDE; rowIndex++) {
     if (board[rowIndex][columnIndex] != '-' &&
         board[rowIndex][columnIndex] != '#') {
-      c = board[rowIndex][columnIndex];
+      symbol = board[rowIndex][columnIndex];
       break;
     }
   }
-
-  int scoreCount = 0;
-  for (const char& cell : board[rowIndex]) {
-    if (cell == c) {
-      scoreCount++;
-      if (scoreCount == WIN_SCORE) {
-        return true;
-      }
-    } else {
-      scoreCount = 0;
+  cout << symbol << " " << rowIndex << endl;
+  auto countConsecutive = [&](int r, int c, int dr, int dc) {
+    int count = 0;
+    while (r >= 0 && r < TRIANGLE_SIDE && c >= 0 && c < TRIANGLE_SIDE &&
+           board[r][c] == symbol) {
+      count++;
+      r += dr;
+      c += dc;
     }
-  }
+    return count;
+  };
 
-  scoreCount = 0;
-  for (int i = rowIndex; i < TRIANGLE_SIDE; i++) {
-    if (board[i][columnIndex] == c) {
-      scoreCount++;
-      if (scoreCount == WIN_SCORE) {
-        return true;
-      }
-    } else {
-      scoreCount = 0;
-    }
-  }
-
-  scoreCount = 0;
-  int offset = min(rowIndex, columnIndex);
-  int currentRowIndex = rowIndex - offset;
-  int currentColumnIndex = columnIndex - offset;
-  while (currentRowIndex < TRIANGLE_SIDE &&
-         currentColumnIndex < TRIANGLE_SIDE) {
-    if (board[currentRowIndex][currentColumnIndex] == c) {
-      scoreCount++;
-      if (scoreCount == WIN_SCORE) {
-        return true;
-      }
-    } else {
-      scoreCount = 0;
-    }
-    currentRowIndex++;
-    currentColumnIndex++;
-  }
-
-  scoreCount = 0;
-  offset = min(TRIANGLE_SIDE - 1 - rowIndex, columnIndex);
-  currentRowIndex = rowIndex + offset;
-  currentColumnIndex = columnIndex - offset;
-  while (currentRowIndex >= 0 && currentColumnIndex < TRIANGLE_SIDE) {
-    if (board[currentRowIndex][currentColumnIndex] == c) {
-      scoreCount++;
-      if (scoreCount == WIN_SCORE) {
-        return true;
-      }
-    } else {
-      scoreCount = 0;
-    }
-    currentRowIndex--;
-    currentColumnIndex++;
-  }
-
+  int horizontalCheck = countConsecutive(rowIndex, columnIndex, 0, -1) +
+                        countConsecutive(rowIndex, columnIndex, 0, 1) - 1;
+  if (horizontalCheck >= WIN_SCORE) return true;
+  int verticalCheck = countConsecutive(rowIndex, columnIndex, -1, 0) +
+                      countConsecutive(rowIndex, columnIndex, 1, 0) - 1;
+  if (verticalCheck >= WIN_SCORE) return true;
+  int diag1Check = countConsecutive(rowIndex, columnIndex, -1, -1) +
+                   countConsecutive(rowIndex, columnIndex, 1, 1) - 1;
+  if (diag1Check >= WIN_SCORE) return true;
+  int diag2Check = countConsecutive(rowIndex, columnIndex, -1, 1) +
+                   countConsecutive(rowIndex, columnIndex, 1, -1) - 1;
+  if (diag2Check >= WIN_SCORE) return true;
   return false;
 }
