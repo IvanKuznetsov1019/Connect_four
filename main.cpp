@@ -1,10 +1,13 @@
+#include "AIPlayer.h"
 #include "Game.h"
+#include "HumanPlayer.h"
 #include "RectBoard.H"
 #include "TriangleBoard.h"
 
 int main() {
-  Game game(new RectBoard());
-  // Game game(new TriangleBoard());
+  HumanPlayer humanPlayer("Chelovek");
+  AIPlayer aiPlayer("Terminator3000");
+  Game game(new RectBoard(), &humanPlayer, &aiPlayer);
   game.setup();
   game.play();
   return 0;

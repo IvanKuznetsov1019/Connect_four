@@ -1,7 +1,5 @@
 #include "RectBoard.h"
 
-#include <iostream>
-
 using namespace std;
 
 RectBoard::RectBoard() : IBoard() { reset(); }
@@ -58,7 +56,7 @@ bool RectBoard::isWin(const int columnIndex) const {
     }
   }
 
-  auto countConsecutive = [&](int r, int c, int dr, int dc) {
+  auto countConsecutive = [&](int r, int c, const int dr, const int dc) {
     int count = 0;
     while (r >= 0 && r < NUM_OF_ROWS && c >= 0 && c < NUM_OF_COLUMNS &&
            board[r][c] == symbol) {

@@ -1,67 +1,41 @@
 #include "Game.h"
 
-#include <iostream>
-#include <map>
-
 using namespace std;
 
-bool isNumber(string& command) {
-  for (const char c : command) {
-    if (!isdigit(c)) {
-      return false;
-    }
-  }
-  return true;
-}
-
-Game::Game(IBoard* gbPtr)
-    : playerId(0), columnIndex(0), command(""), gameBoard(gbPtr) {}
+Game::Game(IBoard* gbPtr, IPlayer* p1, IPlayer* p2)
+    : gameBoard(gbPtr), players{p1, p2} {}
 
 void Game::setup() { setlocale(LC_ALL, "ru_RU.UTF-8"); }
 
 void Game::play() {
-  map<int, char> idToSymbol = {{0, 'o'}, {1, 'x'}};
+  IPlayer* player;
+  int playerNumber = 0;
+  gameBoard->draw();
+
+  auto gameRestart = [&]() {
+    gameBoard->reset();
+    gameBoard->draw();
+    playerNumber = 0;
+  };
 
   while (true) {
+    player = players[playerNumber];
+    cout << "Ходит игрок " << player->getId() << endl;
+    player->makeMove(gameBoard);
     gameBoard->draw();
-    cout << "Ходит игрок №" << to_string(playerId + 1) << endl;
-    cin >> command;
 
-    if (command == "exit") {
-      break;
-    } else if (!isNumber(command)) {
-      cout << "Некорректная команда: " << command << endl;
-      continue;
-    }
-    columnIndex = stoi(command);
-
-    if (columnIndex < 1 || columnIndex > NUM_OF_COLUMNS) {
-      cout << "Выбранный столбец не существует" << endl;
-      continue;
-    }
-    columnIndex--;
-
-    if (!gameBoard->placeChip(columnIndex, idToSymbol[playerId])) {
-      cout << "В столбце нет свободной клетки" << endl;
-      continue;
-    }
-
-    if (gameBoard->isWin(columnIndex)) {
-      gameBoard->draw();
-      cout << "Победил игрок №" << to_string(playerId + 1) << endl;
-      gameBoard->reset();
-      playerId = 0;
+    if (gameBoard->isWin(player->getColumnIndex() - 1)) {
+      cout << "Победил игрок " << player->getId() << endl;
+      gameRestart();
       continue;
     }
 
     if (gameBoard->isFull()) {
       cout << "Ничья" << endl;
-      gameBoard->reset();
-      playerId = 0;
+      gameRestart();
       continue;
     }
 
-    playerId++;
-    playerId %= 2;
+    playerNumber = (playerNumber == NUM_OF_PLAYERS - 1) ? 0 : playerNumber + 1;
   }
 }

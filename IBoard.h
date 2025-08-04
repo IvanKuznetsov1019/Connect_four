@@ -1,9 +1,11 @@
-#ifndef BOARD_H
-#define BOARD_H
+#ifndef I_BOARD_H
+#define I_BOARD_H
 #define WIN_SCORE 4
 #define NUM_OF_COLUMNS 7
 #define NUM_OF_ROWS 6
 #define TRIANGLE_SIDE 7
+
+#include <iostream>
 
 class IBoard {
  public:

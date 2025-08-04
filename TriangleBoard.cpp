@@ -1,7 +1,5 @@
 #include "TriangleBoard.h"
 
-#include <iostream>
-
 using namespace std;
 
 TriangleBoard::TriangleBoard() : IBoard() { reset(); }

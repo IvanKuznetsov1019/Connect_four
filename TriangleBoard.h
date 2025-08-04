@@ -1,5 +1,5 @@
-#ifndef TRIANGLEBOARD_H
-#define TRIANGLEBOARD_H
+#ifndef TRIANGLE_BOARD_H
+#define TRIANGLE_BOARD_H
 #include "IBoard.h"
 class TriangleBoard : public IBoard {
  public:

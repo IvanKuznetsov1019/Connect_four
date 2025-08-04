@@ -1,5 +1,5 @@
-#ifndef RECTBOARD_H
-#define RECTBOARD_H
+#ifndef RECT_BOARD_H
+#define RECT_BOARD_H
 #include "IBoard.h"
 class RectBoard : public IBoard {
  public:
