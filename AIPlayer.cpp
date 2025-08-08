@@ -2,7 +2,8 @@
 
 using std::string;
 
-AIPlayer::AIPlayer(string playerId) : id(playerId) {}
+AIPlayer::AIPlayer(string playerId)
+    : IPlayer(), IAIPlayerMixin(), id(playerId) {}
 
 char AIPlayer::getPlayerSymbol() const { return symbol; }
 

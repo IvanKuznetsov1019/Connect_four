@@ -14,7 +14,7 @@ bool isNumber(string& command) {
   return true;
 }
 
-HumanPlayer::HumanPlayer(string playerId) : id(playerId) {}
+HumanPlayer::HumanPlayer(string playerId) : IPlayer(), id(playerId) {}
 
 char HumanPlayer::getPlayerSymbol() const { return symbol; }
 

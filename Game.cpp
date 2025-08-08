@@ -5,7 +5,7 @@ using namespace std;
 Game::Game(IBoard* gbPtr, IPlayer* p1, IPlayer* p2)
     : gameBoard(gbPtr), players{p1, p2} {}
 
-void Game::setup() { setlocale(LC_ALL, "ru_RU.UTF-8"); }
+void Game::setup() {}
 
 void Game::play() {
   IPlayer* player;
