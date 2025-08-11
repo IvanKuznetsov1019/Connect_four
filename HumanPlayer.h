@@ -12,11 +12,12 @@ class HumanPlayer : public IPlayer {
   const std::string& getId() const override;
 
  private:
+  int isCorrectNum(const std::string& command);  ////////
   char symbol = 'o';
   int columnIndex;
   std::string id;
 };
 
-bool isNumber(std::string& command);
+bool isNumber(const std::string& command);
 
 #endif

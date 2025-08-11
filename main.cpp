@@ -1,7 +1,7 @@
 #include "AIPlayer.h"
 #include "Game.h"
 #include "HumanPlayer.h"
-#include "RectBoard.H"
+#include "RectBoard.h"
 #include "TriangleBoard.h"
 
 int main() {

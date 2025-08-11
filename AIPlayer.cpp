@@ -12,7 +12,7 @@ int AIPlayer::getColumnIndex() const { return columnIndex; }
 void AIPlayer::makeMove(IBoard* gameBoard) {
   srand(time({}));
   columnIndex = rand() % 7 + 1;
-  while (!gameBoard->placeChip(getColumnIndex() - 1, getPlayerSymbol())) {
+  while (!gameBoard->mvPlaceChip(getColumnIndex() - 1, getPlayerSymbol())) {
     columnIndex = rand() % 7 + 1;
   }
 }

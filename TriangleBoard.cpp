@@ -30,7 +30,7 @@ bool TriangleBoard::isFull() const {
   return true;
 }
 
-bool TriangleBoard::placeChip(const int columnIndex, const char symbol) {
+bool TriangleBoard::mvPlaceChip(const int columnIndex, const char symbol) {
   int rowIndex;
   for (rowIndex = TRIANGLE_SIDE - 1; rowIndex >= 0; rowIndex--) {
     if (board[rowIndex][columnIndex] == '-') {
@@ -43,6 +43,15 @@ bool TriangleBoard::placeChip(const int columnIndex, const char symbol) {
   board[rowIndex][columnIndex] = symbol;
   return true;
 }
+
+bool TriangleBoard::mvDeleteChip(const int columnIndex) { return 1; }
+bool TriangleBoard::mvPlaceBobmb(const int columnIndex) { return 1; }
+bool TriangleBoard::mvSwapChips(const int columnIndexOne,
+                                const int columnIndexTwo) {
+  return 1;
+}
+void TriangleBoard::mvCyclicShift(const int rowIndex, const std::string& dir) {}
+void TriangleBoard::mvBoardFlip() {}
 
 bool TriangleBoard::isWin(const int columnIndex) const {
   char symbol = '-';

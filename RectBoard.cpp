@@ -30,7 +30,7 @@ bool RectBoard::isFull() const {
   return true;
 }
 
-bool RectBoard::placeChip(const int columnIndex, const char symbol) {
+bool RectBoard::mvPlaceChip(const int columnIndex, const char symbol) {
   int rowIndex = 0;
   for (const auto& row : board) {
     if (row[columnIndex] == '-') {
@@ -43,6 +43,99 @@ bool RectBoard::placeChip(const int columnIndex, const char symbol) {
   }
   board[rowIndex][columnIndex] = symbol;
   return true;
+}
+
+bool RectBoard::mvDeleteChip(const int columnIndex) {
+  int rowIndex = -1;
+  for (int i = NUM_OF_ROWS - 1; i >= 0; i--) {
+    if (board[i][columnIndex] != '-') {
+      rowIndex = i;
+      break;
+    }
+  }
+  if (rowIndex < 0) {
+    return false;
+  }
+  board[rowIndex][columnIndex] = '-';
+  return true;
+}
+
+bool RectBoard::mvPlaceBobmb(const int columnIndex) {
+  int rowIndex = 0;
+  for (const auto& row : board) {
+    if (row[columnIndex] == '-') {
+      break;
+    }
+    rowIndex++;
+  }
+
+  if (rowIndex >= NUM_OF_ROWS) {
+    return false;
+  }
+
+  for (int i = -1; i < 2; i++) {
+    for (int j = -1; j < 2; j++) {
+      if ((rowIndex + i) >= 0 && (columnIndex + j) < NUM_OF_COLUMNS &&
+          (columnIndex + j) >= 0 && (rowIndex + i) < NUM_OF_ROWS) {
+        board[rowIndex + i][columnIndex + j] = '-';
+      }
+    }
+  }
+  return true;
+}
+
+bool RectBoard::mvSwapChips(const int columnIndexOne,
+                            const int columnIndexTwo) {
+  int rowIndexOne = -1;
+  int rowIndexTwo = -1;
+  for (int i = NUM_OF_ROWS - 1; i >= 0; i--) {
+    if (board[i][columnIndexOne] != '-') {
+      rowIndexOne = i;
+      break;
+    }
+  }
+  for (int i = NUM_OF_ROWS - 1; i >= 0; i--) {
+    if (board[i][columnIndexTwo] != '-') {
+      rowIndexTwo = i;
+      break;
+    }
+  }
+  if (rowIndexOne < 0 || rowIndexTwo < 0) {
+    return false;
+  }
+  char tmpCell = board[rowIndexOne][columnIndexOne];
+  board[rowIndexOne][columnIndexOne] = board[rowIndexTwo][columnIndexTwo];
+  board[rowIndexTwo][columnIndexTwo] = tmpCell;
+  ;
+  return true;
+}
+
+void RectBoard::mvCyclicShift(const int rowIndex, const std::string& dir) {
+  if (dir == "left") {
+    char tmpCell = board[rowIndex][0];
+    for (int i = 0; i < NUM_OF_COLUMNS - 1; i++) {
+      board[rowIndex][i] = board[rowIndex][i + 1];
+    }
+    board[rowIndex][NUM_OF_COLUMNS - 1] = tmpCell;
+  } else {
+    char tmpCell = board[rowIndex][NUM_OF_COLUMNS - 1];
+    for (int i = NUM_OF_COLUMNS - 1; i > 0; i--) {
+      board[rowIndex][i] = board[rowIndex][i - 1];
+    }
+    board[rowIndex][0] = tmpCell;
+  }
+  // привести доску в порядок
+}
+
+void RectBoard::mvBoardFlip() {  ///???
+  char tmpCell;
+  for (int i = 0; i < NUM_OF_ROWS / 2; i++) {
+    for (int j = 0; j < NUM_OF_COLUMNS; j++) {
+      tmpCell = board[i][j];
+      board[i][j] = board[NUM_OF_ROWS - 1 - i][j];
+      board[NUM_OF_ROWS - 1 - i][j] = tmpCell;
+    }
+  }
 }
 
 bool RectBoard::isWin(const int columnIndex) const {

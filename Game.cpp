@@ -5,6 +5,8 @@ using namespace std;
 Game::Game(IBoard* gbPtr, IPlayer* p1, IPlayer* p2)
     : gameBoard(gbPtr), players{p1, p2} {}
 
+Game::~Game() { delete gameBoard; }
+
 void Game::setup() {}
 
 void Game::play() {
@@ -20,18 +22,18 @@ void Game::play() {
 
   while (true) {
     player = players[playerNumber];
-    cout << "Ходит игрок " << player->getId() << endl;
+    cout << "Player " << player->getId() << " making move." << endl;
     player->makeMove(gameBoard);
     gameBoard->draw();
 
     if (gameBoard->isWin(player->getColumnIndex() - 1)) {
-      cout << "Победил игрок " << player->getId() << endl;
+      cout << "Player " << player->getId() << " is win!" << endl;
       gameRestart();
       continue;
     }
 
     if (gameBoard->isFull()) {
-      cout << "Ничья" << endl;
+      cout << "Dead heat." << endl;
       gameRestart();
       continue;
     }

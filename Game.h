@@ -8,6 +8,7 @@
 class Game {
  public:
   Game(IBoard* gbPtr, IPlayer* p1, IPlayer* p2);
+  ~Game();
   void play();
   void setup();
 
