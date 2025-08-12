@@ -11,9 +11,14 @@ class RectBoard : public IBoard {
   bool mvPlaceChip(const int columnIndex, const char symbol) override;
   bool mvDeleteChip(const int columnIndex) override;
   bool mvPlaceBobmb(const int columnIndex) override;
-  bool mvSwapChips(const int columnIndexOne, const int columnIndexTwo) override;
+  bool mvSwapChips(const int columnIndexOne, const int rowIndexOne,
+                   const int columnIndexTwo, const int rowIndexTwo) override;
   void mvCyclicShift(const int rowIndex, const std::string& dir) override;
   void mvBoardFlip() override;
+
+ protected:
+  void dropChips() override;
+  int findEmptyCellRowIndex(const int columnIndex) override;
 
  private:
   char board[NUM_OF_ROWS][NUM_OF_COLUMNS];

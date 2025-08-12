@@ -14,13 +14,24 @@ bool isNumber(const string& command) {
   return true;
 }
 
+int isInRange(const std::string& num, const int min, const int max) {
+  if (!isNumber(num)) {
+    return 0;
+  }
+  int n = stoi(num);
+  if (n > max || n < min) {
+    return 0;
+  }
+  return n;
+}
+
 HumanPlayer::HumanPlayer(string playerId) : IPlayer(), id(playerId) {}
 
 char HumanPlayer::getPlayerSymbol() const { return symbol; }
 
 int HumanPlayer::getColumnIndex() const { return columnIndex; }
 
-void HumanPlayer::makeMove(IBoard* gameBoard) {  /////////////
+void HumanPlayer::makeMove(IBoard* gameBoard) {
   string command;
 
   while (true) {
@@ -28,15 +39,18 @@ void HumanPlayer::makeMove(IBoard* gameBoard) {  /////////////
 
     if (command == "bomb") {
       cin >> command;
-      if (columnIndex = isCorrectNum(command)) {
-        gameBoard->mvPlaceBobmb(columnIndex - 1);
+      if (columnIndex = isInRange(command, 1, NUM_OF_COLUMNS)) {
+        if (!gameBoard->mvPlaceBobmb(columnIndex - 1)) {
+          cout << "You cant place bomb on this column.." << endl;
+          continue;
+        }
         break;
       }
     }
 
     if (command == "delete") {
       cin >> command;
-      if (columnIndex = isCorrectNum(command)) {
+      if (columnIndex = isInRange(command, 1, NUM_OF_COLUMNS)) {
         if (!gameBoard->mvDeleteChip(columnIndex - 1)) {
           cout << "There is no used cell in the column." << endl;
           continue;
@@ -52,11 +66,19 @@ void HumanPlayer::makeMove(IBoard* gameBoard) {  /////////////
 
     if (command == "swap") {
       cin >> command;
-      int columnIndexOne = isCorrectNum(command);
+      int columnIndexOne = isInRange(command, 1, NUM_OF_COLUMNS);
       cin >> command;
-      int columnIndexTwo = isCorrectNum(command);
-      if (columnIndexOne && columnIndexTwo) {
-        gameBoard->mvSwapChips(columnIndexOne - 1, columnIndexTwo - 1);
+      int rowIndexOne = isInRange(command, 1, NUM_OF_COLUMNS);
+      cin >> command;
+      int columnIndexTwo = isInRange(command, 1, NUM_OF_COLUMNS);
+      cin >> command;
+      int rowIndexTwo = isInRange(command, 1, NUM_OF_COLUMNS);
+      if (columnIndexOne && columnIndexTwo && rowIndexOne && rowIndexTwo) {
+        if (!gameBoard->mvSwapChips(columnIndexOne - 1, rowIndexOne - 1,
+                                    columnIndexTwo - 1, rowIndexTwo - 1)) {
+          cout << "You can't use empty cells for this command." << endl;
+          continue;
+        }
         break;
       }
       cout << "Incorrect command." << endl;
@@ -68,7 +90,7 @@ void HumanPlayer::makeMove(IBoard* gameBoard) {  /////////////
       if (command == "left" || command == "right") {
         string dir = command;
         cin >> command;
-        int rowIndex = isCorrectNum(command);
+        int rowIndex = isInRange(command, 1, NUM_OF_COLUMNS);
         if (rowIndex > 0 && rowIndex < 7) {
           gameBoard->mvCyclicShift(rowIndex - 1, dir);
           break;
@@ -102,14 +124,3 @@ void HumanPlayer::makeMove(IBoard* gameBoard) {  /////////////
 }
 
 const string& HumanPlayer::getId() const { return id; }
-
-int HumanPlayer::isCorrectNum(const string& command) {
-  if (!isNumber(command)) {
-    return 0;
-  }
-  int col = stoi(command);
-  if (col > 7 || col < 1) {
-    return 0;
-  }
-  return col;
-}

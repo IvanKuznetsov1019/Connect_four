@@ -15,10 +15,14 @@ class IBoard {
   virtual bool mvPlaceChip(const int columnIndex, const char symbol) = 0;
   virtual bool mvDeleteChip(const int columnIndex) = 0;
   virtual bool mvPlaceBobmb(const int columnIndex) = 0;
-  virtual bool mvSwapChips(const int columnIndexOne,
-                           const int columnIndexTwo) = 0;
+  virtual bool mvSwapChips(const int columnIndexOne, const int rowIndexOne,
+                           const int columnIndexTwo, const int rowIndexTwo) = 0;
   virtual void mvCyclicShift(const int rowIndex, const std::string& dir) = 0;
   virtual void mvBoardFlip() = 0;
   virtual bool isWin(const int columnIndex) const = 0;
+
+ protected:
+  virtual void dropChips() = 0;
+  virtual int findEmptyCellRowIndex(const int columnIndex) = 0;
 };
 #endif

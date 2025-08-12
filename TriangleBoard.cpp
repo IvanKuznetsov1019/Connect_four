@@ -46,12 +46,15 @@ bool TriangleBoard::mvPlaceChip(const int columnIndex, const char symbol) {
 
 bool TriangleBoard::mvDeleteChip(const int columnIndex) { return 1; }
 bool TriangleBoard::mvPlaceBobmb(const int columnIndex) { return 1; }
-bool TriangleBoard::mvSwapChips(const int columnIndexOne,
-                                const int columnIndexTwo) {
+bool TriangleBoard::mvSwapChips(const int columnIndexOne, const int rowIndexOne,
+                                const int columnIndexTwo,
+                                const int rowIndexTwo) {
   return 1;
 }
 void TriangleBoard::mvCyclicShift(const int rowIndex, const std::string& dir) {}
 void TriangleBoard::mvBoardFlip() {}
+void TriangleBoard::dropChips() {}
+int TriangleBoard::findEmptyCellRowIndex(const int columnIndex) { return 1; }
 
 bool TriangleBoard::isWin(const int columnIndex) const {
   char symbol = '-';
