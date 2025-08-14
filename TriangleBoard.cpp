@@ -31,12 +31,7 @@ bool TriangleBoard::isFull() const {
 }
 
 bool TriangleBoard::mvPlaceChip(const int columnIndex, const char symbol) {
-  int rowIndex;
-  for (rowIndex = TRIANGLE_SIDE - 1; rowIndex >= 0; rowIndex--) {
-    if (board[rowIndex][columnIndex] == '-') {
-      break;
-    }
-  }
+  int rowIndex = findEmptyCellRowIndex(columnIndex);
   if (rowIndex < 0) {
     return false;
   }
@@ -44,17 +39,87 @@ bool TriangleBoard::mvPlaceChip(const int columnIndex, const char symbol) {
   return true;
 }
 
-bool TriangleBoard::mvDeleteChip(const int columnIndex) { return 1; }
-bool TriangleBoard::mvPlaceBobmb(const int columnIndex) { return 1; }
+bool TriangleBoard::mvDeleteChip(const int columnIndex) {
+  int rowIndex = findEmptyCellRowIndex(columnIndex);
+  if (rowIndex < 0) {
+    rowIndex = columnIndex;
+    board[rowIndex][columnIndex] = '-';
+    return true;
+  } else if (rowIndex < TRIANGLE_SIDE - 1) {
+    board[++rowIndex][columnIndex] = '-';
+    return true;
+  }
+  return false;
+}
+
+bool TriangleBoard::mvPlaceBobmb(const int columnIndex) {
+  int rowIndex = findEmptyCellRowIndex(columnIndex);
+  if (rowIndex < 0) {
+    return false;
+  }
+  for (int i = -1; i < 2; i++) {
+    for (int j = -1; j < 2; j++) {
+      if ((rowIndex + i) >= 0 && (columnIndex + j) < TRIANGLE_SIDE &&
+          (columnIndex + j) >= 0 && (rowIndex + i) < TRIANGLE_SIDE &&
+          board[rowIndex + i][columnIndex + j] != '#') {
+        board[rowIndex + i][columnIndex + j] = '-';
+      }
+    }
+  }
+  dropChips();
+  return true;
+}
+
 bool TriangleBoard::mvSwapChips(const int columnIndexOne, const int rowIndexOne,
                                 const int columnIndexTwo,
                                 const int rowIndexTwo) {
-  return 1;
+  if (board[rowIndexOne][columnIndexOne] == '-' ||
+      board[rowIndexTwo][columnIndexTwo] == '-' ||
+      board[rowIndexOne][columnIndexOne] == '#' ||
+      board[rowIndexTwo][columnIndexTwo] == '#') {
+    return false;
+  }
+  char tmpCell = board[rowIndexOne][columnIndexOne];
+  board[rowIndexOne][columnIndexOne] = board[rowIndexTwo][columnIndexTwo];
+  board[rowIndexTwo][columnIndexTwo] = tmpCell;
+  return true;
 }
-void TriangleBoard::mvCyclicShift(const int rowIndex, const std::string& dir) {}
-void TriangleBoard::mvBoardFlip() {}
-void TriangleBoard::dropChips() {}
-int TriangleBoard::findEmptyCellRowIndex(const int columnIndex) { return 1; }
+
+// void TriangleBoard::mvCyclicShift(const int rowIndex, const std::string& dir)
+// {} void TriangleBoard::mvBoardFlip() {}
+
+void TriangleBoard::dropChips() {
+  int i = 0, j = 0;
+
+  auto dropUpperChips = [&]() {
+    if (board[j][i] == '-') {
+      int tmpJ = j;
+      while (tmpJ >= 0 && board[tmpJ][i] == '-') {
+        tmpJ--;
+      }
+      if (tmpJ >= 0 && board[tmpJ][i] != '#') {
+        board[j][i] = board[tmpJ][i];
+        board[tmpJ][i] = '-';
+      }
+    }
+  };
+
+  for (i = 0; i < TRIANGLE_SIDE; i++) {
+    for (j = TRIANGLE_SIDE - 1; j >= 0; j--) {
+      dropUpperChips();
+    }
+  }
+}
+
+int TriangleBoard::findEmptyCellRowIndex(const int columnIndex) {
+  int rowIndex = 0;
+  for (rowIndex = TRIANGLE_SIDE - 1; rowIndex >= 0; rowIndex--) {
+    if (board[rowIndex][columnIndex] == '-') {
+      break;
+    }
+  }
+  return rowIndex;
+}
 
 bool TriangleBoard::isWin(const int columnIndex) const {
   char symbol = '-';
@@ -67,7 +132,7 @@ bool TriangleBoard::isWin(const int columnIndex) const {
       break;
     }
   }
-  cout << symbol << " " << rowIndex << endl;
+
   auto countConsecutive = [&](int r, int c, int dr, int dc) {
     int count = 0;
     while (r >= 0 && r < TRIANGLE_SIDE && c >= 0 && c < TRIANGLE_SIDE &&
