@@ -85,8 +85,54 @@ bool TriangleBoard::mvSwapChips(const int columnIndexOne, const int rowIndexOne,
   return true;
 }
 
-// void TriangleBoard::mvCyclicShift(const int rowIndex, const std::string& dir)
-// {} void TriangleBoard::mvBoardFlip() {}
+void TriangleBoard::mvCyclicShift(const int rowIndex, const std::string& dir) {
+  int newRowIndex = TRIANGLE_SIDE - rowIndex - 1;
+  if (dir == "left") {
+    char tmpCell = board[newRowIndex][0];
+    for (int i = 0; i < TRIANGLE_SIDE - 1; i++) {
+      if (board[newRowIndex][i + 1] != '#') {
+        board[newRowIndex][i] = board[newRowIndex][i + 1];
+        continue;
+      } else {
+        board[newRowIndex][i] = tmpCell;
+        break;
+        ;
+      }
+    }
+    int endIndex = TRIANGLE_SIDE - 1;
+    while (board[newRowIndex][endIndex] == '#' && endIndex >= 0) {
+      endIndex--;
+    }
+    board[newRowIndex][endIndex] = tmpCell;
+  } else {
+    int startIndex = TRIANGLE_SIDE - 1;
+    while (board[newRowIndex][startIndex] == '#' && startIndex >= 0) {
+      startIndex--;
+    }
+    char tmpCell = board[newRowIndex][startIndex];
+    for (int i = startIndex; i > 0; i--) {
+      board[newRowIndex][i] = board[newRowIndex][i - 1];
+    }
+    board[newRowIndex][0] = tmpCell;
+  }
+  dropChips();
+}
+
+void TriangleBoard::mvBoardFlip() {
+  for (int i = 0; i < TRIANGLE_SIDE; i++) {
+    int chipsCount = findEmptyCellRowIndex(i);
+    cout << "(" << chipsCount << ")" << endl;
+    if (chipsCount == -1) {
+      chipsCount = i - 1;
+    }
+    for (int j = chipsCount + 1;
+         j <= chipsCount + ((TRIANGLE_SIDE - chipsCount - 1) / 2); j++) {
+      char tmpCell = board[j][i];
+      board[j][i] = board[TRIANGLE_SIDE - 1 - (j - 1 - chipsCount)][i];
+      board[TRIANGLE_SIDE - 1 - (j - 1 - chipsCount)][i] = tmpCell;
+    }
+  }
+}
 
 void TriangleBoard::dropChips() {
   int i = 0, j = 0;
