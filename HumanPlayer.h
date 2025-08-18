@@ -8,7 +8,7 @@ class HumanPlayer : public IPlayer {
   HumanPlayer(std::string playerId);
   char getPlayerSymbol() const override;
   int getColumnIndex() const override;
-  void makeMove(IBoard* gameBoard) override;
+  Move makeMove() override;
   const std::string& getId() const override;
 
  private:
@@ -18,6 +18,6 @@ class HumanPlayer : public IPlayer {
 };
 
 bool isNumber(const std::string& command);
-int isInRange(const std::string& command, const int min, const int max);
+int isInRange(const std::string& command, int min, int max);
 
 #endif

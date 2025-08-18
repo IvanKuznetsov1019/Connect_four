@@ -4,7 +4,7 @@
 class IAIPlayerMixin {
  public:
   virtual int getDifficultyLevel() const = 0;
-  virtual void setDifficultyLevel(const int level) = 0;
+  virtual void setDifficultyLevel(int level) = 0;
 
  protected:
   int difficultyLevel = 1;

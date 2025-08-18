@@ -5,20 +5,21 @@ class RectBoard : public IBoard {
  public:
   RectBoard();
   void reset() override;
-  void draw() const override;
+  void display() const override;
   bool isFull() const override;
-  bool isWin(const int columnIndex) const override;
-  bool mvPlaceChip(const int columnIndex, const char symbol) override;
-  bool mvDeleteChip(const int columnIndex) override;
-  bool mvPlaceBobmb(const int columnIndex) override;
-  bool mvSwapChips(const int columnIndexOne, const int rowIndexOne,
-                   const int columnIndexTwo, const int rowIndexTwo) override;
-  void mvCyclicShift(const int rowIndex, const std::string& dir) override;
+  bool isWin(int columnIndex) const override;
+  bool mvPlaceChip(int columnIndex, char symbol) override;
+  bool mvPopChip(int columnIndex) override;
+  bool mvPlaceBomb(int columnIndex) override;
+  bool mvSwapChips(int columnIndexOne, int rowIndexOne, int columnIndexTwo,
+                   int rowIndexTwo) override;
+  void mvLeftShift(int rowIndex) override;
+  void mvRightShift(int rowIndex) override;
   void mvBoardFlip() override;
 
  protected:
   void dropChips() override;
-  int findEmptyCellRowIndex(const int columnIndex) override;
+  int findEmptyCellRowIndex(int columnIndex) override;
 
  private:
   char board[NUM_OF_ROWS][NUM_OF_COLUMNS];

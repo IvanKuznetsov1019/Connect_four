@@ -1,6 +1,8 @@
 #include "RectBoard.h"
 
-using namespace std;
+using std::cin;
+using std::cout;
+using std::endl;
 
 RectBoard::RectBoard() : IBoard() { reset(); }
 
@@ -12,7 +14,7 @@ void RectBoard::reset() {
   }
 }
 
-void RectBoard::draw() const {
+void RectBoard::display() const {
   for (int i = NUM_OF_ROWS - 1; i >= 0; i--) {
     for (int j = 0; j < NUM_OF_COLUMNS; j++) {
       cout << '|' << board[i][j];
@@ -30,7 +32,7 @@ bool RectBoard::isFull() const {
   return true;
 }
 
-bool RectBoard::mvPlaceChip(const int columnIndex, const char symbol) {
+bool RectBoard::mvPlaceChip(int columnIndex, char symbol) {
   int rowIndex = findEmptyCellRowIndex(columnIndex);
   if (rowIndex < NUM_OF_ROWS) {
     board[rowIndex][columnIndex] = symbol;
@@ -39,16 +41,16 @@ bool RectBoard::mvPlaceChip(const int columnIndex, const char symbol) {
   return false;
 }
 
-bool RectBoard::mvDeleteChip(const int columnIndex) {
+bool RectBoard::mvPopChip(int columnIndex) {
   int rowIndex = findEmptyCellRowIndex(columnIndex);
-  if (rowIndex) {
-    board[--rowIndex][columnIndex] = '-';
+  if (rowIndex > 0) {
+    board[rowIndex - 1][columnIndex] = '-';
     return true;
   }
   return false;
 }
 
-bool RectBoard::mvPlaceBobmb(const int columnIndex) {
+bool RectBoard::mvPlaceBomb(int columnIndex) {
   int rowIndex = findEmptyCellRowIndex(columnIndex);
   if (rowIndex >= NUM_OF_ROWS) {
     return false;
@@ -65,8 +67,8 @@ bool RectBoard::mvPlaceBobmb(const int columnIndex) {
   return true;
 }
 
-bool RectBoard::mvSwapChips(const int columnIndexOne, const int rowIndexOne,
-                            const int columnIndexTwo, const int rowIndexTwo) {
+bool RectBoard::mvSwapChips(int columnIndexOne, int rowIndexOne,
+                            int columnIndexTwo, int rowIndexTwo) {
   if (board[rowIndexOne][columnIndexOne] == '-' ||
       board[rowIndexTwo][columnIndexTwo] == '-') {
     return false;
@@ -77,20 +79,21 @@ bool RectBoard::mvSwapChips(const int columnIndexOne, const int rowIndexOne,
   return true;
 }
 
-void RectBoard::mvCyclicShift(const int rowIndex, const std::string& dir) {
-  if (dir == "left") {
-    char tmpCell = board[rowIndex][0];
-    for (int i = 0; i < NUM_OF_COLUMNS - 1; i++) {
-      board[rowIndex][i] = board[rowIndex][i + 1];
-    }
-    board[rowIndex][NUM_OF_COLUMNS - 1] = tmpCell;
-  } else {
-    char tmpCell = board[rowIndex][NUM_OF_COLUMNS - 1];
-    for (int i = NUM_OF_COLUMNS - 1; i > 0; i--) {
-      board[rowIndex][i] = board[rowIndex][i - 1];
-    }
-    board[rowIndex][0] = tmpCell;
+void RectBoard::mvLeftShift(int rowIndex) {
+  char tmpCell = board[rowIndex][0];
+  for (int i = 0; i < NUM_OF_COLUMNS - 1; i++) {
+    board[rowIndex][i] = board[rowIndex][i + 1];
   }
+  board[rowIndex][NUM_OF_COLUMNS - 1] = tmpCell;
+  dropChips();
+}
+
+void RectBoard::mvRightShift(int rowIndex) {
+  char tmpCell = board[rowIndex][NUM_OF_COLUMNS - 1];
+  for (int i = NUM_OF_COLUMNS - 1; i > 0; i--) {
+    board[rowIndex][i] = board[rowIndex][i - 1];
+  }
+  board[rowIndex][0] = tmpCell;
   dropChips();
 }
 
@@ -131,7 +134,7 @@ void RectBoard::dropChips() {
   }
 }
 
-int RectBoard::findEmptyCellRowIndex(const int columnIndex) {
+int RectBoard::findEmptyCellRowIndex(int columnIndex) {
   int rowIndex = 0;
   for (const auto& row : board) {
     if (row[columnIndex] == '-') {
@@ -142,7 +145,7 @@ int RectBoard::findEmptyCellRowIndex(const int columnIndex) {
   return rowIndex;
 }
 
-bool RectBoard::isWin(const int columnIndex) const {
+bool RectBoard::isWin(int columnIndex) const {
   char symbol = '-';
   int rowIndex = -1;
 

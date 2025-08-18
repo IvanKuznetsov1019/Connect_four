@@ -9,16 +9,14 @@ char AIPlayer::getPlayerSymbol() const { return symbol; }
 
 int AIPlayer::getColumnIndex() const { return columnIndex; }
 
-void AIPlayer::makeMove(IBoard* gameBoard) {
+Move AIPlayer::makeMove() {
   srand(time({}));
-  columnIndex = rand() % 7 + 1;
-  while (!gameBoard->mvPlaceChip(getColumnIndex() - 1, getPlayerSymbol())) {
-    columnIndex = rand() % 7 + 1;
-  }
+  columnIndex = rand() % 7;
+  return Move(PLACE_CHIP, columnIndex);
 }
 
 const string& AIPlayer::getId() const { return id; }
 
 int AIPlayer::getDifficultyLevel() const { return difficultyLevel; }
 
-void AIPlayer::setDifficultyLevel(const int level) { difficultyLevel = level; }
+void AIPlayer::setDifficultyLevel(int level) { difficultyLevel = level; }

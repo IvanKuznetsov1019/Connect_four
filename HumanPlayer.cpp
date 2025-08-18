@@ -14,7 +14,7 @@ bool isNumber(const string& command) {
   return true;
 }
 
-int isInRange(const std::string& num, const int min, const int max) {
+int isInRange(const std::string& num, int min, int max) {
   if (!isNumber(num)) {
     return 0;
   }
@@ -31,96 +31,95 @@ char HumanPlayer::getPlayerSymbol() const { return symbol; }
 
 int HumanPlayer::getColumnIndex() const { return columnIndex; }
 
-void HumanPlayer::makeMove(IBoard* gameBoard) {
+Move HumanPlayer::makeMove() {
   string command;
+  Move currentMove;
+  cin >> command;
 
-  while (true) {
+  if (command == "bomb") {
     cin >> command;
-
-    if (command == "bomb") {
-      cin >> command;
-      if (columnIndex = isInRange(command, 1, NUM_OF_COLUMNS)) {
-        if (!gameBoard->mvPlaceBobmb(columnIndex - 1)) {
-          cout << "You cant place bomb on this column.." << endl;
-          continue;
-        }
-        break;
-      }
+    if (columnIndex = isInRange(command, 1, NUM_OF_COLUMNS)) {
+      currentMove.type = PLACE_BOMB;
+      currentMove.col = columnIndex - 1;
+      return currentMove;
     }
-
-    if (command == "delete") {
-      cin >> command;
-      if (columnIndex = isInRange(command, 1, NUM_OF_COLUMNS)) {
-        if (!gameBoard->mvDeleteChip(columnIndex - 1)) {
-          cout << "There is no used cell in the column." << endl;
-          continue;
-        }
-        break;
-      }
-    }
-
-    if (command == "flip") {
-      gameBoard->mvBoardFlip();
-      break;
-    }
-
-    if (command == "swap") {
-      cin >> command;
-      int columnIndexOne = isInRange(command, 1, NUM_OF_COLUMNS);
-      cin >> command;
-      int rowIndexOne = isInRange(command, 1, NUM_OF_COLUMNS);
-      cin >> command;
-      int columnIndexTwo = isInRange(command, 1, NUM_OF_COLUMNS);
-      cin >> command;
-      int rowIndexTwo = isInRange(command, 1, NUM_OF_COLUMNS);
-      if (columnIndexOne && columnIndexTwo && rowIndexOne && rowIndexTwo) {
-        if (!gameBoard->mvSwapChips(columnIndexOne - 1, rowIndexOne - 1,
-                                    columnIndexTwo - 1, rowIndexTwo - 1)) {
-          cout << "You can't use empty cells for this command." << endl;
-          continue;
-        }
-        break;
-      }
-      cout << "Incorrect command." << endl;
-      continue;
-    }
-
-    if (command == "shift") {
-      cin >> command;
-      if (command == "left" || command == "right") {
-        string dir = command;
-        cin >> command;
-        int rowIndex = isInRange(command, 1, NUM_OF_COLUMNS);
-        if (rowIndex > 0 && rowIndex < 7) {
-          gameBoard->mvCyclicShift(rowIndex - 1, dir);
-          break;
-        }
-      }
-      cout << "Incorrect command: " << command << endl;
-      continue;
-    }
-
-    if (command == "exit") {
-      exit(0);
-    }
-
-    if (!isNumber(command)) {
-      cout << "Incorrect command: " << command << endl;
-      continue;
-    }
-    columnIndex = stoi(command);
-
-    if (columnIndex < 1 || columnIndex > NUM_OF_COLUMNS) {
-      cout << "The selected column does not exist." << endl;
-      continue;
-    }
-
-    if (!gameBoard->mvPlaceChip(columnIndex - 1, getPlayerSymbol())) {
-      cout << "There is no free cell in the column." << endl;
-      continue;
-    }
-    break;
+    currentMove.type = INCORRECT;
+    return currentMove;
   }
+
+  if (command == "pop") {
+    cin >> command;
+    if (columnIndex = isInRange(command, 1, NUM_OF_COLUMNS)) {
+      currentMove.type = POP_CHIP;
+      currentMove.col = columnIndex - 1;
+      return currentMove;
+    }
+    currentMove.type = INCORRECT;
+    return currentMove;
+  }
+
+  if (command == "flip") {
+    currentMove.type = BOARD_FLIP;
+    return currentMove;
+  }
+
+  if (command == "swap") {
+    cin >> command;
+    int columnIndexOne = isInRange(command, 1, NUM_OF_COLUMNS);
+    cin >> command;
+    int rowIndexOne = isInRange(command, 1, NUM_OF_COLUMNS);
+    cin >> command;
+    int columnIndexTwo = isInRange(command, 1, NUM_OF_COLUMNS);
+    cin >> command;
+    int rowIndexTwo = isInRange(command, 1, NUM_OF_COLUMNS);
+    if (columnIndexOne && columnIndexTwo && rowIndexOne && rowIndexTwo) {
+      currentMove.type = SWAP_CHIPS;
+      currentMove.col = columnIndexOne - 1;
+      currentMove.row = rowIndexOne - 1;
+      currentMove.targetCol = columnIndexTwo - 1;
+      currentMove.targetRow = rowIndexTwo - 1;
+      return currentMove;
+    }
+    currentMove.type = INCORRECT;
+    return currentMove;
+  }
+
+  if (command == "shift") {
+    cin >> command;
+    if (command == "left") {
+      string dir = command;
+      cin >> command;
+      int rowIndex = isInRange(command, 1, NUM_OF_COLUMNS);
+      currentMove.type = LEFT_SHIFT;
+      currentMove.row = rowIndex - 1;
+      return currentMove;
+    } else if (command == "right") {
+      string dir = command;
+      cin >> command;
+      int rowIndex = isInRange(command, 1, NUM_OF_COLUMNS);
+      currentMove.type = RIGHT_SHIFT;
+      currentMove.row = rowIndex - 1;
+      return currentMove;
+    }
+    currentMove.type = INCORRECT;
+    return currentMove;
+  }
+
+  if (command == "exit") {
+    currentMove.type = EXIT;
+    return currentMove;
+  }
+
+  if (!isNumber(command)) {
+    currentMove.type = INCORRECT;
+    return currentMove;
+  }
+
+  columnIndex = stoi(command);
+
+  currentMove.type = PLACE_CHIP;
+  currentMove.col = columnIndex - 1;
+  return currentMove;
 }
 
 const string& HumanPlayer::getId() const { return id; }

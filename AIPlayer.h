@@ -9,10 +9,10 @@ class AIPlayer : public IPlayer, public IAIPlayerMixin {
   AIPlayer(std::string playerId);
   char getPlayerSymbol() const override;
   int getColumnIndex() const override;
-  void makeMove(IBoard* gameBoard) override;
+  Move makeMove() override;
   const std::string& getId() const override;
   int getDifficultyLevel() const override;
-  void setDifficultyLevel(const int level) override;
+  void setDifficultyLevel(int level) override;
 
  private:
   char symbol = 'x';
