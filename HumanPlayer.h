@@ -18,6 +18,4 @@ class HumanPlayer : public IPlayer {
 };
 
 bool isNumber(const std::string& command);
-int isInRange(const std::string& command, int min, int max);
-
 #endif

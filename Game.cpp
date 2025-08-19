@@ -27,34 +27,15 @@ void Game::play() {
     player = players[playerNumber];
     cout << "Player " << player->getId() << " making move." << endl;
     move = player->makeMove();
-    switch (move.type) {
-      case PLACE_CHIP:
-        gameBoard->mvPlaceChip(move.col, player->getPlayerSymbol());
-        break;
-      case POP_CHIP:
-        gameBoard->mvPopChip(move.col);
-        break;
-      case PLACE_BOMB:
-        gameBoard->mvPlaceBomb(move.col);
-        break;
-      case SWAP_CHIPS:
-        gameBoard->mvSwapChips(move.col, move.row, move.targetCol,
-                               move.targetRow);
-        break;
-      case LEFT_SHIFT:
-        gameBoard->mvLeftShift(move.row);
-        break;
-      case RIGHT_SHIFT:
-        gameBoard->mvRightShift(move.row);
-        break;
-      case BOARD_FLIP:
-        gameBoard->mvBoardFlip();
-        break;
-      case EXIT:
-        exit(0);
-      default:
-        cout << "Incorrect command" << endl;
-        break;
+
+    if (move.type == INCORRECT) {
+      cout << "Invalid command: <" << move.incorrectCommand << ">." << endl;
+      continue;
+    }
+
+    if (!executeMove(move, player->getPlayerSymbol())) {
+      cout << "Invalid command args." << endl;
+      continue;
     }
 
     gameBoard->display();
@@ -73,4 +54,46 @@ void Game::play() {
 
     playerNumber = (playerNumber == NUM_OF_PLAYERS - 1) ? 0 : playerNumber + 1;
   }
+}
+
+bool Game::executeMove(const Move move, char symbol) {
+  switch (move.type) {
+    case PLACE_CHIP:
+      if (gameBoard->mvPlaceChip(move.col, symbol)) {
+        return true;
+      }
+      break;
+    case POP_CHIP:
+      if (gameBoard->mvPopChip(move.col)) {
+        return true;
+      }
+      break;
+    case PLACE_BOMB:
+      if (gameBoard->mvPlaceBomb(move.col)) {
+        return true;
+      }
+      break;
+    case SWAP_CHIPS:
+      if (gameBoard->mvSwapChips(move.col, move.row, move.targetCol,
+                                 move.targetRow)) {
+        return true;
+      }
+      break;
+    case LEFT_SHIFT:
+      if (gameBoard->mvLeftShift(move.row)) {
+        return true;
+      }
+      break;
+    case RIGHT_SHIFT:
+      if (gameBoard->mvRightShift(move.row)) {
+        return true;
+      }
+      break;
+    case BOARD_FLIP:
+      gameBoard->mvBoardFlip();
+      return true;
+    case EXIT:
+      exit(0);
+  }
+  return false;
 }

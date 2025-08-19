@@ -33,6 +33,9 @@ bool TriangleBoard::isFull() const {
 }
 
 bool TriangleBoard::mvPlaceChip(int columnIndex, char symbol) {
+  if (!isInBounds(0, columnIndex)) {
+    return false;
+  }
   int rowIndex = findEmptyCellRowIndex(columnIndex);
   if (rowIndex < 0) {
     return false;
@@ -42,6 +45,9 @@ bool TriangleBoard::mvPlaceChip(int columnIndex, char symbol) {
 }
 
 bool TriangleBoard::mvPopChip(int columnIndex) {
+  if (!isInBounds(0, columnIndex)) {
+    return false;
+  }
   int rowIndex = findEmptyCellRowIndex(columnIndex);
   if (rowIndex < 0) {
     rowIndex = columnIndex;
@@ -55,6 +61,9 @@ bool TriangleBoard::mvPopChip(int columnIndex) {
 }
 
 bool TriangleBoard::mvPlaceBomb(int columnIndex) {
+  if (!isInBounds(0, columnIndex)) {
+    return false;
+  }
   int rowIndex = findEmptyCellRowIndex(columnIndex);
   if (rowIndex < 0) {
     return false;
@@ -74,6 +83,12 @@ bool TriangleBoard::mvPlaceBomb(int columnIndex) {
 
 bool TriangleBoard::mvSwapChips(int columnIndexOne, int rowIndexOne,
                                 int columnIndexTwo, int rowIndexTwo) {
+  if (!isInBounds(rowIndexOne, columnIndexOne) ||
+      !isInBounds(rowIndexTwo, columnIndexTwo)) {
+    return false;
+  }
+  rowIndexOne = (rowIndexOne) ? (TRIANGLE_SIDE - 1) % rowIndexOne : 6;
+  rowIndexTwo = (rowIndexTwo) ? (TRIANGLE_SIDE - 1) % rowIndexTwo : 6;
   if (board[rowIndexOne][columnIndexOne] == '-' ||
       board[rowIndexTwo][columnIndexTwo] == '-' ||
       board[rowIndexOne][columnIndexOne] == '#' ||
@@ -86,7 +101,10 @@ bool TriangleBoard::mvSwapChips(int columnIndexOne, int rowIndexOne,
   return true;
 }
 
-void TriangleBoard::mvLeftShift(int rowIndex) {
+bool TriangleBoard::mvLeftShift(int rowIndex) {
+  if (!isInBounds(rowIndex, 0)) {
+    return false;
+  }
   int newRowIndex = TRIANGLE_SIDE - rowIndex - 1;
   char tmpCell = board[newRowIndex][0];
   for (int i = 0; i < TRIANGLE_SIDE - 1; i++) {
@@ -104,9 +122,13 @@ void TriangleBoard::mvLeftShift(int rowIndex) {
   }
   board[newRowIndex][endIndex] = tmpCell;
   dropChips();
+  return true;
 }
 
-void TriangleBoard::mvRightShift(int rowIndex) {
+bool TriangleBoard::mvRightShift(int rowIndex) {
+  if (!isInBounds(rowIndex, 0)) {
+    return false;
+  }
   int newRowIndex = TRIANGLE_SIDE - rowIndex - 1;
   int startIndex = TRIANGLE_SIDE - 1;
   while (board[newRowIndex][startIndex] == '#' && startIndex >= 0) {
@@ -118,12 +140,12 @@ void TriangleBoard::mvRightShift(int rowIndex) {
   }
   board[newRowIndex][0] = tmpCell;
   dropChips();
+  return true;
 }
 
 void TriangleBoard::mvBoardFlip() {
   for (int i = 0; i < TRIANGLE_SIDE; i++) {
     int chipsCount = findEmptyCellRowIndex(i);
-    cout << "(" << chipsCount << ")" << endl;
     if (chipsCount == -1) {
       chipsCount = i - 1;
     }
@@ -205,4 +227,12 @@ bool TriangleBoard::isWin(int columnIndex) const {
                    countConsecutive(rowIndex, columnIndex, 1, -1) - 1;
   if (diag2Check >= WIN_SCORE) return true;
   return false;
+}
+
+bool TriangleBoard::isInBounds(int rowIndex, int columnIndex) {
+  return (rowIndex < NUM_OF_ROWS && columnIndex >= 0 &&
+          columnIndex < NUM_OF_COLUMNS && rowIndex >= 0 &&
+          (rowIndex + columnIndex) < TRIANGLE_SIDE)
+             ? true
+             : false;
 }

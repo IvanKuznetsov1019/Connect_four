@@ -12,7 +12,10 @@ int AIPlayer::getColumnIndex() const { return columnIndex; }
 Move AIPlayer::makeMove() {
   srand(time({}));
   columnIndex = rand() % 7;
-  return Move(PLACE_CHIP, columnIndex);
+  Move mv;
+  mv.type = PLACE_CHIP;
+  mv.col = columnIndex;
+  return mv;
 }
 
 const string& AIPlayer::getId() const { return id; }

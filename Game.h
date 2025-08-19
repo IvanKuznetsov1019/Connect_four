@@ -13,6 +13,7 @@ class Game {
   void setup();
 
  private:
+  bool executeMove(const Move move, char simbol);
   IBoard* gameBoard;
   IPlayer* players[NUM_OF_PLAYERS];
 };

@@ -79,22 +79,30 @@ bool RectBoard::mvSwapChips(int columnIndexOne, int rowIndexOne,
   return true;
 }
 
-void RectBoard::mvLeftShift(int rowIndex) {
+bool RectBoard::mvLeftShift(int rowIndex) {
+  if (!isInBounds(rowIndex, 0)) {
+    return false;
+  }
   char tmpCell = board[rowIndex][0];
   for (int i = 0; i < NUM_OF_COLUMNS - 1; i++) {
     board[rowIndex][i] = board[rowIndex][i + 1];
   }
   board[rowIndex][NUM_OF_COLUMNS - 1] = tmpCell;
   dropChips();
+  return true;
 }
 
-void RectBoard::mvRightShift(int rowIndex) {
+bool RectBoard::mvRightShift(int rowIndex) {
+  if (!isInBounds(rowIndex, 0)) {
+    return false;
+  }
   char tmpCell = board[rowIndex][NUM_OF_COLUMNS - 1];
   for (int i = NUM_OF_COLUMNS - 1; i > 0; i--) {
     board[rowIndex][i] = board[rowIndex][i - 1];
   }
   board[rowIndex][0] = tmpCell;
   dropChips();
+  return true;
 }
 
 void RectBoard::mvBoardFlip() {
@@ -180,4 +188,11 @@ bool RectBoard::isWin(int columnIndex) const {
                    countConsecutive(rowIndex, columnIndex, 1, -1) - 1;
   if (diag2Check >= WIN_SCORE) return true;
   return false;
+}
+
+bool RectBoard::isInBounds(int rowIndex, int columnIndex) {
+  return (rowIndex < NUM_OF_ROWS && columnIndex >= 0 &&
+          columnIndex < NUM_OF_COLUMNS && rowIndex >= 0)
+             ? true
+             : false;
 }

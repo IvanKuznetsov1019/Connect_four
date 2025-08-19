@@ -17,13 +17,14 @@ class IBoard {
   virtual bool mvPlaceBomb(int columnIndex) = 0;
   virtual bool mvSwapChips(int columnIndexOne, int rowIndexOne,
                            int columnIndexTwo, int rowIndexTwo) = 0;
-  virtual void mvLeftShift(int rowIndex) = 0;
-  virtual void mvRightShift(int rowIndex) = 0;
+  virtual bool mvLeftShift(int rowIndex) = 0;
+  virtual bool mvRightShift(int rowIndex) = 0;
   virtual void mvBoardFlip() = 0;
   virtual bool isWin(int columnIndex) const = 0;
 
  protected:
   virtual void dropChips() = 0;
+  virtual bool isInBounds(int rowIndex, int columnIndex) = 0;
   virtual int findEmptyCellRowIndex(int columnIndex) = 0;
 };
 #endif

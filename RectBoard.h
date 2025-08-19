@@ -13,13 +13,14 @@ class RectBoard : public IBoard {
   bool mvPlaceBomb(int columnIndex) override;
   bool mvSwapChips(int columnIndexOne, int rowIndexOne, int columnIndexTwo,
                    int rowIndexTwo) override;
-  void mvLeftShift(int rowIndex) override;
-  void mvRightShift(int rowIndex) override;
+  bool mvLeftShift(int rowIndex) override;
+  bool mvRightShift(int rowIndex) override;
   void mvBoardFlip() override;
 
  protected:
   void dropChips() override;
   int findEmptyCellRowIndex(int columnIndex) override;
+  bool isInBounds(int rowIndex, int columnIndex) override;
 
  private:
   char board[NUM_OF_ROWS][NUM_OF_COLUMNS];
