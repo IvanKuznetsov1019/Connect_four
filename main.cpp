@@ -8,6 +8,7 @@ int main() {
   HumanPlayer humanPlayer("Chelovek");
   AIPlayer aiPlayer("Terminator3000");
   Game game(new TriangleBoard(), &humanPlayer, &aiPlayer);
+  // Game game(new RectBoard(), &humanPlayer, &aiPlayer);
   game.play();
   return 0;
 }

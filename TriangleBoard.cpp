@@ -196,15 +196,6 @@ int TriangleBoard::findEmptyCellRowIndex(int columnIndex) {
 
 bool TriangleBoard::isWin(int columnIndex) const {
   char symbol = '-';
-  int rowIndex = -1;
-
-  for (rowIndex = 0; rowIndex < TRIANGLE_SIDE; rowIndex++) {
-    if (board[rowIndex][columnIndex] != '-' &&
-        board[rowIndex][columnIndex] != '#') {
-      symbol = board[rowIndex][columnIndex];
-      break;
-    }
-  }
 
   auto countConsecutive = [&](int r, int c, int dr, int dc) {
     int count = 0;
@@ -217,18 +208,37 @@ bool TriangleBoard::isWin(int columnIndex) const {
     return count;
   };
 
-  int horizontalCheck = countConsecutive(rowIndex, columnIndex, 0, -1) +
-                        countConsecutive(rowIndex, columnIndex, 0, 1) - 1;
-  if (horizontalCheck >= WIN_SCORE) return true;
-  int verticalCheck = countConsecutive(rowIndex, columnIndex, -1, 0) +
-                      countConsecutive(rowIndex, columnIndex, 1, 0) - 1;
-  if (verticalCheck >= WIN_SCORE) return true;
-  int diag1Check = countConsecutive(rowIndex, columnIndex, -1, -1) +
-                   countConsecutive(rowIndex, columnIndex, 1, 1) - 1;
-  if (diag1Check >= WIN_SCORE) return true;
-  int diag2Check = countConsecutive(rowIndex, columnIndex, -1, 1) +
-                   countConsecutive(rowIndex, columnIndex, 1, -1) - 1;
-  if (diag2Check >= WIN_SCORE) return true;
+  auto checkCellForWin = [countConsecutive](int i, int j) {
+    int horizontalCheck =
+        countConsecutive(i, j, 0, -1) + countConsecutive(i, j, 0, 1) - 1;
+    if (horizontalCheck >= WIN_SCORE) return true;
+    int verticalCheck =
+        countConsecutive(i, j, -1, 0) + countConsecutive(i, j, 1, 0) - 1;
+    if (verticalCheck >= WIN_SCORE) return true;
+    int diag1Check =
+        countConsecutive(i, j, -1, -1) + countConsecutive(i, j, 1, 1) - 1;
+    if (diag1Check >= WIN_SCORE) return true;
+    int diag2Check =
+        countConsecutive(i, j, -1, 1) + countConsecutive(i, j, 1, -1) - 1;
+    if (diag2Check >= WIN_SCORE) return true;
+    return false;
+  };
+
+  for (int i = 0; i < TRIANGLE_SIDE; i++) {
+    for (int j = 0; j < TRIANGLE_SIDE; j++) {
+      symbol = board[i][j];
+      if (symbol == '#') {
+        break;
+      }
+      if (symbol == '-') {
+        continue;
+      }
+      if (checkCellForWin(i, j)) {
+        return true;
+      }
+    }
+  }
+
   return false;
 }
 

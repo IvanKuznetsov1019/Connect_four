@@ -33,6 +33,9 @@ bool RectBoard::isFull() const {
 }
 
 bool RectBoard::mvPlaceChip(int columnIndex, char symbol) {
+  if (!isInBounds(0, columnIndex)) {
+    return false;
+  }
   int rowIndex = findEmptyCellRowIndex(columnIndex);
   if (rowIndex < NUM_OF_ROWS) {
     board[rowIndex][columnIndex] = symbol;
@@ -42,6 +45,9 @@ bool RectBoard::mvPlaceChip(int columnIndex, char symbol) {
 }
 
 bool RectBoard::mvPopChip(int columnIndex) {
+  if (!isInBounds(0, columnIndex)) {
+    return false;
+  }
   int rowIndex = findEmptyCellRowIndex(columnIndex);
   if (rowIndex > 0) {
     board[rowIndex - 1][columnIndex] = '-';
@@ -51,6 +57,9 @@ bool RectBoard::mvPopChip(int columnIndex) {
 }
 
 bool RectBoard::mvPlaceBomb(int columnIndex) {
+  if (!isInBounds(0, columnIndex)) {
+    return false;
+  }
   int rowIndex = findEmptyCellRowIndex(columnIndex);
   if (rowIndex >= NUM_OF_ROWS) {
     return false;
@@ -69,6 +78,10 @@ bool RectBoard::mvPlaceBomb(int columnIndex) {
 
 bool RectBoard::mvSwapChips(int columnIndexOne, int rowIndexOne,
                             int columnIndexTwo, int rowIndexTwo) {
+  if (!isInBounds(rowIndexOne, columnIndexOne) ||
+      !isInBounds(rowIndexTwo, columnIndexTwo)) {
+    return false;
+  }
   if (board[rowIndexOne][columnIndexOne] == '-' ||
       board[rowIndexTwo][columnIndexTwo] == '-') {
     return false;
@@ -155,14 +168,6 @@ int RectBoard::findEmptyCellRowIndex(int columnIndex) {
 
 bool RectBoard::isWin(int columnIndex) const {
   char symbol = '-';
-  int rowIndex = -1;
-
-  for (rowIndex = NUM_OF_ROWS - 1; rowIndex >= 0; rowIndex--) {
-    if (board[rowIndex][columnIndex] != '-') {
-      symbol = board[rowIndex][columnIndex];
-      break;
-    }
-  }
 
   auto countConsecutive = [&](int r, int c, const int dr, const int dc) {
     int count = 0;
@@ -175,18 +180,34 @@ bool RectBoard::isWin(int columnIndex) const {
     return count;
   };
 
-  int horizontalCheck = countConsecutive(rowIndex, columnIndex, 0, -1) +
-                        countConsecutive(rowIndex, columnIndex, 0, 1) - 1;
-  if (horizontalCheck >= WIN_SCORE) return true;
-  int verticalCheck = countConsecutive(rowIndex, columnIndex, -1, 0) +
-                      countConsecutive(rowIndex, columnIndex, 1, 0) - 1;
-  if (verticalCheck >= WIN_SCORE) return true;
-  int diag1Check = countConsecutive(rowIndex, columnIndex, -1, -1) +
-                   countConsecutive(rowIndex, columnIndex, 1, 1) - 1;
-  if (diag1Check >= WIN_SCORE) return true;
-  int diag2Check = countConsecutive(rowIndex, columnIndex, -1, 1) +
-                   countConsecutive(rowIndex, columnIndex, 1, -1) - 1;
-  if (diag2Check >= WIN_SCORE) return true;
+  auto checkCellForWin = [countConsecutive](int i, int j) {
+    int horizontalCheck =
+        countConsecutive(i, j, 0, -1) + countConsecutive(i, j, 0, 1) - 1;
+    if (horizontalCheck >= WIN_SCORE) return true;
+    int verticalCheck =
+        countConsecutive(i, j, -1, 0) + countConsecutive(i, j, 1, 0) - 1;
+    if (verticalCheck >= WIN_SCORE) return true;
+    int diag1Check =
+        countConsecutive(i, j, -1, -1) + countConsecutive(i, j, 1, 1) - 1;
+    if (diag1Check >= WIN_SCORE) return true;
+    int diag2Check =
+        countConsecutive(i, j, -1, 1) + countConsecutive(i, j, 1, -1) - 1;
+    if (diag2Check >= WIN_SCORE) return true;
+    return false;
+  };
+
+  for (int i = 0; i < NUM_OF_ROWS; i++) {
+    for (int j = 0; j < NUM_OF_COLUMNS; j++) {
+      symbol = board[i][j];
+      if (symbol == '-') {
+        continue;
+      }
+      if (checkCellForWin(i, j)) {
+        return true;
+      }
+    }
+  }
+
   return false;
 }
 
