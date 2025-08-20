@@ -47,6 +47,7 @@ Move HumanPlayer::makeMove() {
     }
     currentMove.type = INCORRECT;
     currentMove.incorrectCommand = command;
+    // тут проблемы
     return currentMove;
   }
 
@@ -66,55 +67,46 @@ Move HumanPlayer::makeMove() {
   if (command == "flip") {
     currentMove.type = BOARD_FLIP;
     return currentMove;
+    // columnIndex = ?;
+    // IBoard::isWin() тут тоже не работает по человечески:
+    //  |o|-|-|-|
+    //  |x|-|-|-|
+    //  |x|o|o|o|
+    //  <BOARD_FLIP>
+    //  |X|-|-|-|
+    //  |x|-|-|-|
+    //  |O|o|o|o|
+    //  возможно может случится ничья, когда одновременно
+    // сложаться победные комбинации обоих игроков, но это не точно
   }
 
   if (command == "swap") {
-    // int params[4] = {0, 0, 0, 0};
-    // for (int& p : params) {
-    //   cin >> command;
-    //   if (isNumber(command)) {
-    //     p = stoi(command);
-    //   }
-    // }
-
-    // currentMove.type = SWAP_CHIPS;
-    // currentMove.col = params[0] - 1;
-    // currentMove.row = params[1] - 1;
-    // currentMove.targetCol = params[2] - 1;
-    // currentMove.targetRow = params[3] - 1;
-
-    // if (params[0] && params[1] && params[2] && params[3]) {
-    //   return currentMove;
-    // }
-    // currentMove.type = INCORRECT;
-
-    int columnIndexOne = 0, columnIndexTwo = 0, rowIndexOne = 0,
-        rowIndexTwo = 0;
-    cin >> command;
-    if (isNumber(command)) {
-      columnIndexOne = stoi(command);
+    int params[4] = {0, 0, 0, 0};
+    for (int& p : params) {
+      cin >> command;
+      if (isNumber(command)) {
+        p = stoi(command);
+      }
     }
-    cin >> command;
-    if (isNumber(command)) {
-      rowIndexOne = stoi(command);
-    }
-    cin >> command;
-    if (isNumber(command)) {
-      columnIndexTwo = stoi(command);
-    }
-    cin >> command;
-    if (isNumber(command)) {
-      rowIndexTwo = stoi(command);
-    }
-    if (columnIndexOne && columnIndexTwo && rowIndexOne && rowIndexTwo) {
-      currentMove.type = SWAP_CHIPS;
-      currentMove.col = columnIndexOne - 1;
-      currentMove.row = rowIndexOne - 1;
-      currentMove.targetCol = columnIndexTwo - 1;
-      currentMove.targetRow = rowIndexTwo - 1;
+    if (!params[0] || !params[1] || !params[2] || !params[3]) {
+      currentMove.type = INCORRECT;
       return currentMove;
     }
-    currentMove.type = INCORRECT;
+    currentMove.type = SWAP_CHIPS;
+    currentMove.col = params[0] - 1;
+    currentMove.row = params[1] - 1;
+    currentMove.targetCol = params[2] - 1;
+    currentMove.targetRow = params[3] - 1;
+    // columnIndex = ?;
+    // IBoard::isWin() тут не работает по человечески тоже, как и проверка на
+    // ничью:
+    //  |o|-|-|-|
+    //  |x|-|-|-|
+    //  |x|o|o|o|
+    //  <SWAP_CHIPS> <1, 1, 1, 3>
+    //  |X|-|-|-|
+    //  |x|-|-|-|
+    //  |o|o|o|o|
     return currentMove;
   }
 
@@ -139,6 +131,30 @@ Move HumanPlayer::makeMove() {
     }
     currentMove.type = INCORRECT;
     currentMove.incorrectCommand = command;
+    // ну и тут тоже самое, но ещё хуже:
+    // columnIndex = ?;
+    // IBoard::isWin() тут не работает, ничья тоже:
+    //  |-|-|-|-|
+    //  |x|o|-|-|
+    //  |o|o|-|o|
+    //  <SHIFT_RIGHT> <2>
+    //  |-|-|-|-|
+    //  |-|x|-|-|
+    //  |o|o|o|o|
+    //  или
+    //  |-|-|-|-|-|-|-|
+    //  |x|-|-|-|-|-|-|
+    //  |x|-|-|-|-|-|-|
+    //  |x|-|-|-|-|-|-|
+    //  |o|-|-|-|-|-|-|
+    //  |x|-|o|o|o|-|-|
+    //  <SHIFT_RIGHT> <2>
+    //  |-|-|-|-|-|-|-|
+    //  |-|-|-|-|-|-|-|
+    //  |x|-|-|-|-|-|-|
+    //  |x|-|-|-|-|-|-|
+    //  |x|-|-|-|-|-|-|
+    //  |x|o|o|o|o|-|-|
     return currentMove;
   }
 

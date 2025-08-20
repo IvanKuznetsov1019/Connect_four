@@ -87,14 +87,17 @@ bool TriangleBoard::mvSwapChips(int columnIndexOne, int rowIndexOne,
       !isInBounds(rowIndexTwo, columnIndexTwo)) {
     return false;
   }
-  rowIndexOne = (rowIndexOne) ? (TRIANGLE_SIDE - 1) % rowIndexOne : 6;
-  rowIndexTwo = (rowIndexTwo) ? (TRIANGLE_SIDE - 1) % rowIndexTwo : 6;
+
+  rowIndexOne = TRIANGLE_SIDE - 1 - rowIndexOne;
+  rowIndexTwo = TRIANGLE_SIDE - 1 - rowIndexTwo;
+
   if (board[rowIndexOne][columnIndexOne] == '-' ||
       board[rowIndexTwo][columnIndexTwo] == '-' ||
       board[rowIndexOne][columnIndexOne] == '#' ||
       board[rowIndexTwo][columnIndexTwo] == '#') {
     return false;
   }
+
   char tmpCell = board[rowIndexOne][columnIndexOne];
   board[rowIndexOne][columnIndexOne] = board[rowIndexTwo][columnIndexTwo];
   board[rowIndexTwo][columnIndexTwo] = tmpCell;
@@ -230,8 +233,8 @@ bool TriangleBoard::isWin(int columnIndex) const {
 }
 
 bool TriangleBoard::isInBounds(int rowIndex, int columnIndex) {
-  return (rowIndex < NUM_OF_ROWS && columnIndex >= 0 &&
-          columnIndex < NUM_OF_COLUMNS && rowIndex >= 0 &&
+  return (rowIndex < TRIANGLE_SIDE && columnIndex >= 0 &&
+          columnIndex < TRIANGLE_SIDE && rowIndex >= 0 &&
           (rowIndex + columnIndex) < TRIANGLE_SIDE)
              ? true
              : false;
